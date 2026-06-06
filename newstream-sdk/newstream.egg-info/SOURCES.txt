@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+newstream/__init__.py
+newstream/client.py
+newstream.egg-info/PKG-INFO
+newstream.egg-info/SOURCES.txt
+newstream.egg-info/dependency_links.txt
+newstream.egg-info/requires.txt
+newstream.egg-info/top_level.txt

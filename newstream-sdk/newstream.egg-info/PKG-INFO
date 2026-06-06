@@ -1,0 +1,36 @@
+Metadata-Version: 2.4
+Name: newstream
+Version: 0.1.0
+Summary: Stream every AI session event in real time
+License: MIT
+Project-URL: Homepage, https://github.com/cloudstr3am/newstream
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: requests>=2.28.0
+
+# newstream
+
+Stream every AI session event in real time.
+
+## Install
+
+```bash
+pip install newstream
+```
+
+## Usage
+
+```python
+from newstream import NewStream
+
+stream = NewStream(
+    base_url="https://newstream-production.up.railway.app",
+    api_key="your-api-key",
+    session_id="user-123-session-456"
+)
+
+stream.token("Hello", model="gpt-4", latency_ms=45)
+stream.tool_call("search", {"query": "threats"}, {"results": 5})
+stream.error("Rate limit hit", error_type="RateLimitError")
+stream.done(total_tokens=150, total_latency_ms=3200)
+```
