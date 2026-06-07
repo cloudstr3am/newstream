@@ -197,14 +197,19 @@ except Exception as e:
     raise
 ```
 
-run -- curl https://newstream-production.up.railway.app/sessions
+run -- 
+```bash
+curl https://newstream-production.up.railway.app/sessions
+```
+```bash
 $ curl https://newstream-production.up.railway.app/sessions/gemini-1780834595/replay
+```
 
 example response, 
-
+```bash
 $ curl https://newstream-production.up.railway.app/sessions/gemini-1780834595/replay
 {"session_id":"gemini-1780834595","events":[{"type":"metadata","timestamp":1780834595147,"provider":"google","model":"gemini-2.5-flash"},{"type":"token","timestamp":1780834602389,"text":"It learns patterns from data to make decisions.","model":"gemini-2.5-flash","latency_ms":5575},{"type":"done","timestamp":1780834603336,"total_tokens":8,"total_latency_ms":6522}],"count":3}
-
+```
 ---
 
 
