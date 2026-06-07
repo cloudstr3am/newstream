@@ -1,6 +1,6 @@
 # NewStream — CloudSek Integration Guide
 
-**Backend:** https://newstream-production.up.railway.app  
+**Backend:** https://api.maskllm.com/
 **API Key:** `cloudsek-ceb2f11ae252633ef7e45634dd055672`
 
 ---
@@ -22,7 +22,7 @@ No library to install. No dependencies. Just HTTP.
 ## Send an Event
 
 ```bash
-curl -X POST https://newstream-production.up.railway.app/sessions/{session_id}/events \
+curl -X POST https://api.maskllm.com/sessions/{session_id}/events \
   -H "Content-Type: application/json" \
   -H "x-api-key: cloudsek-ceb2f11ae252633ef7e45634dd055672" \
   -d '{"type": "token", "text": "Hello", "model": "gpt-4", "latency_ms": 45}'
@@ -42,7 +42,7 @@ Pick whichever language your AI backend is in.
 import requests
 import time
 
-NEWSTREAM_URL = "https://newstream-production.up.railway.app"
+NEWSTREAM_URL = "https://api.maskllm.com"
 NEWSTREAM_KEY = "cloudsek-ceb2f11ae252633ef7e45634dd055672"
 
 def track(session_id: str, event_type: str, data: dict):
@@ -77,7 +77,7 @@ track(session_id, "done", {"total_tokens": 350, "total_latency_ms": 4200})
 ### Node.js
 
 ```javascript
-const NEWSTREAM_URL = "https://newstream-production.up.railway.app";
+const NEWSTREAM_URL = "https://api.maskllm.com/";
 const NEWSTREAM_KEY = "cloudsek-ceb2f11ae252633ef7e45634dd055672";
 
 async function track(sessionId, eventType, data) {
@@ -115,7 +115,7 @@ from google import genai
 
 GEMINI_API_KEY = "AQ.Ab8RN6L6EsqjSOdPYfF7-P5xEObFKvoG0S6YBhXYPc78OQri3w"
 
-NEWSTREAM_URL = "https://newstream-production.up.railway.app"
+NEWSTREAM_URL = "https://api.maskllm.com"
 NEWSTREAM_KEY = "cloudsek-ceb2f11ae252633ef7e45634dd055672"
 
 # -----------------------------------
@@ -199,15 +199,15 @@ except Exception as e:
 
 run -- 
 ```bash
-curl https://newstream-production.up.railway.app/sessions
+curl https://api.maskllm.com/sessions
 ```
 ```bash
-$ curl https://newstream-production.up.railway.app/sessions/gemini-1780834595/replay
+$ curl https://api.maskllm.com/sessions/gemini-1780834595/replay
 ```
 
 example response, 
 ```bash
-$ curl https://newstream-production.up.railway.app/sessions/gemini-1780834595/replay
+$ curl https://api.maskllm.com/sessions/gemini-1780834595/replay
 {"session_id":"gemini-1780834595","events":[{"type":"metadata","timestamp":1780834595147,"provider":"google","model":"gemini-2.5-flash"},{"type":"token","timestamp":1780834602389,"text":"It learns patterns from data to make decisions.","model":"gemini-2.5-flash","latency_ms":5575},{"type":"done","timestamp":1780834603336,"total_tokens":8,"total_latency_ms":6522}],"count":3}
 ```
 ---
@@ -217,19 +217,19 @@ $ curl https://newstream-production.up.railway.app/sessions/gemini-1780834595/re
 
 ### List all sessions
 ```bash
-curl https://newstream-production.up.railway.app/sessions
+curl https://api.maskllm.com/sessions
 ```
 
 ### Replay a full session
 ```bash
-curl https://newstream-production.up.railway.app/sessions/{session_id}/replay
+curl https://api.maskllm.com/sessions/{session_id}/replay
 ```
 
 Returns every event in order from start to finish.
 
 ### Watch a session live (real time)
 ```bash
-curl https://newstream-production.up.railway.app/sessions/{session_id}/live
+curl https://api.maskllm.com/sessions/{session_id}/live
 ```
 
 Streams events as they happen via SSE. Keep this open while a customer session runs and you see every event appear in real time.
@@ -251,12 +251,12 @@ Streams events as they happen via SSE. Keep this open while a customer session r
 ## Test It Right Now
 
 ```bash
-curl -X POST https://newstream-production.up.railway.app/sessions/cloudsek-test/events \
+curl -X POST https://api.maskllm.com/sessions/cloudsek-test/events \
   -H "Content-Type: application/json" \
   -H "x-api-key: cloudsek-ceb2f11ae252633ef7e45634dd055672" \
   -d '{"type": "token", "text": "test event", "model": "gpt-4"}'
 
-curl https://newstream-production.up.railway.app/sessions/cloudsek-test/replay
+curl https://api.maskllm.com/sessions/cloudsek-test/replay
 ```
 
 Second curl should return your event.
