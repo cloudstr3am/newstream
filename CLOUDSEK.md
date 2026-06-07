@@ -102,31 +102,111 @@ await track("customer-123", "done", { total_tokens: 150 });
 ```
 
 ---
+## Example 
 
-## Or Use Our SDK (Optional)
+```app.py
+import time
+import requests
+from google import genai
 
-If you prefer a cleaner interface, install our SDK:
+# -----------------------------------
+# CONFIG
+# -----------------------------------
 
-```bash
-pip install newstream
+GEMINI_API_KEY = "AQ.Ab8RN6L6EsqjSOdPYfF7-P5xEObFKvoG0S6YBhXYPc78OQri3w"
+
+NEWSTREAM_URL = "https://newstream-production.up.railway.app"
+NEWSTREAM_KEY = "cloudsek-ceb2f11ae252633ef7e45634dd055672"
+
+# -----------------------------------
+# GEMINI CLIENT
+# -----------------------------------
+
+client = genai.Client(api_key=GEMINI_API_KEY)
+
+session_id = f"gemini-{int(time.time())}"
+
+# -----------------------------------
+# TRACK FUNCTION
+# -----------------------------------
+
+def track(event_type: str, data: dict):
+    try:
+        requests.post(
+            f"{NEWSTREAM_URL}/sessions/{session_id}/events",
+            headers={
+                "Content-Type": "application/json",
+                "x-api-key": NEWSTREAM_KEY
+            },
+            json={
+                "type": event_type,
+                "timestamp": int(time.time() * 1000),
+                **data
+            },
+            timeout=5
+        )
+    except Exception as e:
+        print("Tracking failed:", e)
+
+# -----------------------------------
+# SEND METADATA
+# -----------------------------------
+
+track("metadata", {
+    "provider": "google",
+    "model": "gemini-2.5-flash"
+})
+
+# -----------------------------------
+# REAL LLM CALL
+# -----------------------------------
+
+try:
+    start = time.time()
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents="Explain how AI works in a few words",
+    )
+
+    text = response.text
+
+    print("\nAssistant:\n")
+    print(text)
+
+    # SEND RESPONSE EVENT
+    track("token", {
+        "text": text,
+        "model": "gemini-2.5-flash",
+        "latency_ms": int((time.time() - start) * 1000)
+    })
+
+    # DONE EVENT
+    track("done", {
+        "total_tokens": len(text.split()),
+        "total_latency_ms": int((time.time() - start) * 1000)
+    })
+
+except Exception as e:
+
+    track("error", {
+        "message": str(e),
+        "error_type": type(e).__name__
+    })
+
+    raise
 ```
 
-```python
-from newstream import NewStream
+run -- curl https://newstream-production.up.railway.app/sessions
+$ curl https://newstream-production.up.railway.app/sessions/gemini-1780834595/replay
 
-stream = NewStream(
-    base_url="https://newstream-production.up.railway.app",
-    api_key="cloudsek-ceb2f11ae252633ef7e45634dd055672",
-    session_id="customer-123-session-456"
-)
+example response, 
 
-stream.token("Hello", model="gpt-4", latency_ms=45)
-stream.tool_call("threat_search", {"query": "ransomware"}, {"results": 5})
-stream.error("Rate limit hit", error_type="RateLimitError")
-stream.done(total_tokens=350, total_latency_ms=4200)
-```
+$ curl https://newstream-production.up.railway.app/sessions/gemini-1780834595/replay
+{"session_id":"gemini-1780834595","events":[{"type":"metadata","timestamp":1780834595147,"provider":"google","model":"gemini-2.5-flash"},{"type":"token","timestamp":1780834602389,"text":"It learns patterns from data to make decisions.","model":"gemini-2.5-flash","latency_ms":5575},{"type":"done","timestamp":1780834603336,"total_tokens":8,"total_latency_ms":6522}],"count":3}
 
 ---
+
 
 ## View Your Sessions
 
